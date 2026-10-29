@@ -28,13 +28,12 @@ jobs:
           echo "sdk.dir=$HOME/sdk" > local.properties
           echo "ANDROID_HOME=$HOME/sdk" >> $GITHUB_ENV
 
-      - name: Gradle wrapper
+      - name: Gradle via SDKMAN
         run: |
-          wget -q https://services.gradle.org/distributions/gradle-8.6-bin.zip -O /tmp/gradle.zip
-          unzip -q /tmp/gradle.zip -d /opt/gradle-dist
-          GRADLE_BIN=$(find /opt/gradle-dist -name "gradle" -type f | head -1)
-          echo "Found gradle at: $GRADLE_BIN"
-          $GRADLE_BIN wrapper --gradle-version=8.6
+          curl -s "https://get.sdkman.io" | bash
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          sdk install gradle 8.6
+          gradle wrapper --gradle-version=8.6
           chmod +x gradlew
 
       - name: Build APK
